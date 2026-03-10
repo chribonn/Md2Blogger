@@ -1,0 +1,51 @@
+{
+  "forbidden_tags": [
+    "html", "head", "body", "meta", "link", "title",
+    "style", "script",
+    "header", "footer", "nav", "main", "section", "article", "aside",
+    "col", "colgroup",
+    "form", "input", "textarea", "select", "button",
+    "iframe", "embed", "object",
+    "svg", "canvas", "video", "audio",
+    "base", "template", "slot"
+  ],
+
+  "styles": {
+    "h1": "font-family: verdana, sans-serif; color: #333; font-size: 2em; margin-top: 1em; margin-bottom: 0.5em;",
+    "h2": "font-family: verdana, sans-serif; color: #444; font-size: 1.5em; margin-top: 1em; margin-bottom: 0.5em;",
+    "h3": "font-family: verdana, sans-serif; color: #555; font-size: 1.17em; margin-top: 1em; margin-bottom: 0.5em;",
+    "h4": "font-family: verdana, sans-serif; color: #555; font-size: 1em; margin-top: 1em; margin-bottom: 0.5em;",
+    "h5": "font-family: verdana, sans-serif; color: #555; font-size: 0.83em; margin-top: 1em; margin-bottom: 0.5em;",
+    "h6": "font-family: verdana, sans-serif; color: #555; font-size: 0.75em; margin-top: 1em; margin-bottom: 0.5em;",
+    "p": "font-family: verdana, sans-serif; line-height: 1.6; color: #333; margin-bottom: 1em;",
+    "strong": "font-weight: bold;",
+    "em": "font-style: italic;",
+    "a": "color: #1a73e8; text-decoration: underline;",
+    "code": "font-family: 'Courier New', monospace; background-color: #f4f4f4; padding: 2px 4px; border-radius: 3px; font-size: 0.9em;",
+    "pre": "margin: 0; white-space: pre-wrap; word-wrap: break-word;",
+    "blockquote": "border-left: 4px solid #ccc; padding: 10px 15px; color: #666; margin: 1em 0; font-family: verdana, sans-serif;",
+    "table": "border-collapse: collapse; width: 100%; margin: 1em 0; font-family: verdana, sans-serif;",
+    "thead": "",
+    "tbody": "",
+    "tr": "",
+    "th": "border: 1px solid #ddd; padding: 8px 12px; background-color: #f2f2f2; text-align: left; font-weight: bold; color: #333;",
+    "td": "border: 1px solid #ddd; padding: 8px 12px; color: #333;",
+    "img": "max-width: 100%; height: auto; display: block; margin: 1em 0;",
+    "ul": "padding-left: 20px; margin-bottom: 1em; font-family: verdana, sans-serif; color: #333;",
+    "ol": "padding-left: 20px; margin-bottom: 1em; font-family: verdana, sans-serif; color: #333;",
+    "li": "margin-bottom: 5px; line-height: 1.6;",
+    "hr": "border: none; border-top: 1px solid #ccc; margin: 20px 0;",
+    "del": "text-decoration: line-through; color: #999;",
+    "sup": "font-size: 0.75em; vertical-align: super;",
+    "sub": "font-size: 0.75em; vertical-align: sub;",
+    "br": "",
+    "div": ""
+  },
+
+  "code_block_wrapper": "<div style=\"background-color: #f4f4f4; padding: 15px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; margin: 1em 0;\">{content}</div>",
+
+  "obsidian": {
+    "image_base_url": "",
+    "image_extension_default": ".png"
+  }
+}
