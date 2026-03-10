@@ -1,5 +1,7 @@
 # Md2Blogger
 
+Version 0.9
+
 A Python tool that converts Obsidian-flavored Markdown files into Blogger-compatible HTML snippets with inline styling. The output is clean inner-content HTML ready to paste directly into Blogger's HTML View.
 
 ## Why

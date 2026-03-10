@@ -8,6 +8,8 @@ Usage:
     python md2blogger.py input.md [-o output.html]
 """
 
+__version__ = "0.9"
+
 import argparse
 import json
 import re
@@ -130,6 +132,17 @@ def inject_styles_and_sanitize(html: str, config: dict) -> str:
             # Mark as processed
             code_tag["data-cb"] = "1"
 
+            # Ensure code content starts on a new line after <code> tag
+            # and ends on a new line before </code> — fixes Blogger's
+            # first-line indentation quirk.
+            raw_code = code_tag.decode_contents()
+            if not raw_code.startswith("\n"):
+                raw_code = "\n" + raw_code
+            if not raw_code.endswith("\n"):
+                raw_code = raw_code + "\n"
+            code_tag.clear()
+            code_tag.append(NavigableString(raw_code))
+
             # Apply pre style
             if "pre" in styles and styles["pre"]:
                 pre_tag["style"] = styles["pre"]
@@ -169,6 +182,124 @@ def inject_styles_and_sanitize(html: str, config: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Pretty-printing
+# ---------------------------------------------------------------------------
+
+# Tags that are rendered on their own line (block-level)
+BLOCK_TAGS = {
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "p", "div", "blockquote", "pre",
+    "ul", "ol", "li",
+    "table", "thead", "tbody", "tr", "th", "td",
+    "hr", "br", "img",
+}
+
+# Tags whose inner whitespace must be preserved
+PREFORMATTED_TAGS = {"pre", "code"}
+
+
+def pretty_print(html: str, indent: str = "  ") -> str:
+    """Indent HTML for readability, preserving whitespace inside <pre>/<code>."""
+    soup = BeautifulSoup(html, "html.parser")
+    lines: list[str] = []
+
+    def _is_preformatted(tag) -> bool:
+        """Check if this tag or any ancestor is a preformatted element."""
+        node = tag
+        while node:
+            if getattr(node, "name", None) in PREFORMATTED_TAGS:
+                return True
+            node = node.parent
+        return False
+
+    def _has_block_children(node) -> bool:
+        """Check if a node contains any block-level child tags."""
+        for child in node.children:
+            if not isinstance(child, NavigableString):
+                if child.name in BLOCK_TAGS:
+                    return True
+        return False
+
+    def _build_attrs(node) -> str:
+        """Build the attribute string for an opening tag."""
+        attrs = ""
+        for key, val in (node.attrs or {}).items():
+            if isinstance(val, list):
+                val = " ".join(val)
+            attrs += f' {key}="{val}"'
+        return attrs
+
+    def _inline_content(node) -> str:
+        """Render a node's children as a single inline string, collapsing whitespace."""
+        parts: list[str] = []
+        for child in node.children:
+            if isinstance(child, NavigableString):
+                text = str(child)
+                # Collapse internal whitespace but preserve single spaces
+                collapsed = " ".join(text.split())
+                if collapsed:
+                    parts.append(collapsed)
+            else:
+                parts.append(str(child))
+        # Join parts, but avoid adding spaces before punctuation
+        result = ""
+        for part in parts:
+            if result and part and not part[0] in ".,;:!?)]}'" and not result.endswith("("):
+                result += " "
+            result += part
+        return result
+
+    def _render(node, depth: int):
+        if isinstance(node, NavigableString):
+            text = str(node)
+            if not text.strip():
+                return
+            if _is_preformatted(node):
+                lines.append(text)
+            else:
+                lines.append(f"{indent * depth}{text.strip()}")
+            return
+
+        tag_name = node.name
+        if tag_name is None:
+            for child in node.children:
+                _render(child, depth)
+            return
+
+        in_pre = _is_preformatted(node)
+        attrs = _build_attrs(node)
+
+        # Self-closing tags
+        if tag_name in ("hr", "br", "img"):
+            lines.append(f"{indent * depth}<{tag_name}{attrs}/>")
+            return
+
+        is_block = tag_name in BLOCK_TAGS
+
+        if in_pre:
+            # Preformatted: emit raw, no re-indenting
+            lines.append(f"{indent * depth}{str(node)}")
+        elif is_block and not _has_block_children(node):
+            # Block element with only inline content — render on one line
+            inner = _inline_content(node)
+            lines.append(f"{indent * depth}<{tag_name}{attrs}>{inner}</{tag_name}>")
+        elif is_block:
+            # Block element with nested block children — expand
+            lines.append(f"{indent * depth}<{tag_name}{attrs}>")
+            for child in node.children:
+                _render(child, depth + 1)
+            lines.append(f"{indent * depth}</{tag_name}>")
+        else:
+            # Inline element — keep on one line
+            lines.append(f"{indent * depth}{str(node)}")
+
+    for child in soup.children:
+        _render(child, 0)
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # Main pipeline
 # ---------------------------------------------------------------------------
 
@@ -183,9 +314,11 @@ def convert(md_text: str, config: dict) -> str:
     # Step 3: Inject inline styles and sanitize
     styled_html = inject_styles_and_sanitize(raw_html, config)
 
-    # Step 4: Light cleanup
-    # Remove any stray <style> blocks that might have been in the source
+    # Step 4: Light cleanup — remove stray <style> blocks
     styled_html = re.sub(r"<style[^>]*>.*?</style>", "", styled_html, flags=re.DOTALL | re.IGNORECASE)
+
+    # Step 5: Pretty-print for readability
+    styled_html = pretty_print(styled_html)
 
     return styled_html.strip()
 
@@ -194,6 +327,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Convert Obsidian Markdown to Blogger-compatible HTML."
     )
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("input", help="Path to the .md input file")
     parser.add_argument(
         "-o", "--output",
