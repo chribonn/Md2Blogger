@@ -1,2 +1,6 @@
 /.venv
 /prompts
+/.vscode
+/.kiro
+__pycache__/
+.pytest_cache/

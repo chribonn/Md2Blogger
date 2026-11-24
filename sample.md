@@ -1,10 +1,17 @@
-# Welcome to My Blog Post
+---
+title: Sample post
+tags: [sample, md2blogger]
+---
+# Welcome to My Blog Post (v 2)
 
 This is a paragraph with **bold text**, *italic text*, and ***bold italic*** together.
 
 ## A Section with Links
 
-Check out [[My Other Post]] or visit [Google](https://www.google.com) for more info.
+#### Relative Link ![README.md](<./README.md>) 
+#### URL
+Go to [Google](https://www.google.com) for more info.
+
 Here's a [[Some Page|custom display text]] wikilink.
 
 ### Code Examples
@@ -61,15 +68,14 @@ greet("World")
 
 ![[my-screenshot.png]]
 
-![[diagram]]
-
-![Standard markdown image](https://example.com/photo.jpg)
+![Standard markdown image](https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2@2x.png)
 
 ## Horizontal Rule
 
 ---
 
 ## Highlighted Text
+^highlights
 
 This has ==highlighted text== in the middle of a sentence.
 
@@ -77,6 +83,80 @@ This has ==highlighted text== in the middle of a sentence.
 
 This is ~~deleted text~~ in a paragraph.
 
+## Block References
+
+This section links back to the [highlighted text section](#^highlights) above.
+
+## Callouts
+
+> [!hint] Callout Title
+> This is some text
+>
+> - with bullet points
+
+> [!warning] Mind the gap
+> Each callout type has its own colour and icon.
+
+> [!faq]- A folded question
+> Readers click the title to open this one.
+
+> [!question] Can callouts be nested?
+> > [!success] Yes, they can.
+
+## Highlight Colours
+
+==🔴Important==, ==🟠Follow up==, ==🟡Remember this==, ==🟢Completed==, ==🔵Reference== and ==🟣Idea==.
+
+## Footnotes
+
+Footnotes are numbered automatically[^1], and can be written inline too.^[Like this one.]
+
+[^1]: This is the referenced text.
+
+## Comments
+
+This sentence has a hidden %%private%% comment.
+
+%%
+This whole block is a comment and does not appear in the post.
+%%
+
+## Tags
+
+This post is filed under #obsidian and #blogging/how-to.
+
+## Maths
+
+Euler's identity is $e^{i\pi} + 1 = 0$.
+
+$$
+\frac{a}{b} = c
+$$
+
+## More Task Statuses
+
+- [x] Done
+- [-] Cancelled (any character marks a task as done)
+- [ ] Still to do
+
+## Image Sizes
+
+![[my-screenshot.png|300]]
+
+## Links Within the Post
+
+Jump back to [[#Lists]] or to the [[#^highlights|highlighted text]].
+
+## Diagram
+
+```mermaid
+graph TD
+    Obsidian --> Md2Blogger --> Blogger
+```
+
 ## Final Thoughts
 
 That's all for now. This post was converted from **Obsidian** to **Blogger** automatically!
+
+
+
