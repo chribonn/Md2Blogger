@@ -12,10 +12,6 @@ This is a paragraph with **bold text**, *italic text*, and ***bold italic*** tog
 #### URL
 Go to [Google](https://www.google.com) for more info.
 
-#### Absolute Link
-[Absolute Link](file://D:\chrib\PythonProjects\Md2Blogger\sample.html) is a great file to read
-
-
 Here's a [[Some Page|custom display text]] wikilink.
 
 ### Code Examples
